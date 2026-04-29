@@ -13,7 +13,7 @@ import logging
 from json import JSONDecodeError
 from datetime import datetime, timedelta
 
-# Forza l'encoding di stdout su utf-8 quando possibile (Python 3.7+)
+# Forza l'encoding di stdout su utf-8 quando possibile
 try:
     sys.stdout.reconfigure(encoding='utf-8')
 except Exception:
@@ -29,21 +29,21 @@ def safe_print(msg: str):
         filtered = msg.encode('utf-8', errors='replace').decode('ascii', errors='ignore')
         print(filtered)
 
-# Optional auto-install (commentato per sicurezza in ambienti di produzione)
+# Optional auto-install
 def install_dependencies():
     dependencies = ['customtkinter', 'pypdf', 'requests', 'psutil', 'ollama', 'win10toast']
     for lib in dependencies:
         try:
             __import__(lib)
         except ImportError:
-            safe_print(f"📦 Libreria '{lib}' mancante. Installazione in corso...")
+            safe_print(f"Libreria '{lib}' mancante. Installazione in corso...")
             try:
                 subprocess.check_call([sys.executable, "-m", "pip", "install", lib])
                 safe_print(f"✅ '{lib}' installata con successo!")
             except Exception as e:
                 safe_print(f"❌ Errore installazione '{lib}': {e}")
 
-# install_dependencies()  # lasciare commentato se non vuoi auto-install
+# install_dependencies()
 
 # Import UI libs
 try:
@@ -119,16 +119,16 @@ def suggerisci_modello_smart(hw):
     gpu = (hw.get("gpu") or "").upper()
     if "NVIDIA" in gpu or "AMD" in gpu:
         if ram >= 16:
-            return "llama3.1:8b", "🔥 Prestazioni alte"
+            return "llama3.1:8b", "Prestazioni alte"
         elif ram >= 10:
-            return "llama3", "⚡ Bilanciato"
+            return "llama3", "Bilanciato"
         else:
-            return "phi3:mini", "💡 Leggero GPU"
+            return "phi3:mini", "Leggero GPU"
     else:
         if ram <= 8:
-            return "tinyllama", "💻 Base"
+            return "tinyllama", "Base"
         else:
-            return "phi3:mini", "🧠 CPU smart"
+            return "phi3:mini", "CPU smart"
 
 def is_executable_available(cmd_name: str) -> bool:
     return shutil.which(cmd_name) is not None
@@ -209,9 +209,9 @@ class SmartBridge:
                 except Exception:
                     testo_pulito = re.sub(r'\{.*?"content":\s*"(.*?)"\}', r'\1', testo, flags=re.DOTALL)
                     return testo_pulito.strip()
-            return f"⚠️ Errore Bridge (Codice {resp.status_code})"
+            return f"Errore Bridge (Codice {resp.status_code})"
         except Exception as e:
-            return f"❌ Connessione fallita: {str(e)}"
+            return f"Connessione fallita: {str(e)}"
 
 # ---------------------------
 # FatturaAutomation (kept)
@@ -526,10 +526,10 @@ class ApexLedgerApp(BaseAppClass):
         try:
             if hasattr(self, 'chat_area'):
                 if self.ollama_info.get("installed"):
-                    self.chat_area.insert("end", f"\n🧠 Ollama rilevato: {self.ollama_info.get('version')}\n")
+                    self.chat_area.insert("end", f"\nOllama rilevato: {self.ollama_info.get('version')}\n")
                 else:
-                    self.chat_area.insert("end", "\n⚠️ Ollama non trovato (opzionale)\n")
-                self.chat_area.insert("end", f"💡 Modello consigliato: {self.modello_locale} ({self.diagnosi_testo})\n")
+                    self.chat_area.insert("end", "\nOllama non trovato (opzionale)\n")
+                self.chat_area.insert("end", f"Modello consigliato: {self.modello_locale} ({self.diagnosi_testo})\n")
         except Exception:
             pass
 
@@ -708,7 +708,7 @@ class ApexLedgerApp(BaseAppClass):
                 self.chat_area.insert("end", f"\n[FILE] Caricato {os.path.basename(path)} ({pages_count} pag.)\n")
                 # Debug: PDF senza testo leggibile (scansione)
                 if not self.pdf_text or not self.pdf_text.strip():
-                    self.chat_area.insert("end", "⚠️ Il PDF non contiene testo leggibile (forse è una scansione). Considera l'uso di OCR (pytesseract).\n")
+                    self.chat_area.insert("end", "Il PDF non contiene testo leggibile (forse è una scansione). Considera l'uso di OCR (pytesseract).\n")
                 try:
                     self.btn_analyze.configure(state="normal")
                 except Exception:
@@ -910,7 +910,7 @@ class ApexLedgerApp(BaseAppClass):
             if m_ent:
                 ent = m_ent.group(2).strip()
 
-            # 🧠 LOGICA INTELLIGENTE AZIENDA
+            #LOGICA INTELLIGENTE AZIENDA
             tipo_movimento = "USCITA"
             if hasattr(self, 'mia_piva') and self.mia_piva:
                 if self.mia_piva in self.pdf_text:
@@ -928,7 +928,7 @@ class ApexLedgerApp(BaseAppClass):
                 "giorni_scadenza": 30
             }
 
-            self.chat_area.insert("end", "⚠️ AI non precisa → uso fallback intelligente\n")
+            self.chat_area.insert("end", "AI non precisa → uso fallback intelligente\n")
 
         # Arricchisci con imponibile/iva se possibile
         amounts = _parse_amounts_from_text(self.pdf_text)
@@ -1065,7 +1065,7 @@ class ApexLedgerApp(BaseAppClass):
                 pass
 
         except Exception as e:
-            self.chat_area.insert("end", f"❌ Errore salvataggio: {e}\n")
+            self.chat_area.insert("end", f"Errore salvataggio: {e}\n")
 
     def aggiorna_bilancio(self, data, totale):
         try:
